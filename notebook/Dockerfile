@@ -1,6 +1,6 @@
-# Ubuntu Vivid / Python 3 / IPython Notebook 3.0
+# Ubuntu Xenial / Python 3 / IPython Notebook 3.0
 
-FROM ubuntu:vivid
+FROM ubuntu:xenial
 MAINTAINER datatyp
 
 RUN apt-get update
@@ -32,8 +32,12 @@ RUN pip3 install elasticsearch
 RUN apt-get -y install r-recommended r-cran-evaluate
 RUN pip3 install r2_kernel
 
+
+#mathjax stuff
+RUN echo 'from IPython.external import mathjax; mathjax.install_mathjax()' | python3
+
 # Other useful tools
 RUN apt-get install -y jq curl
 
 EXPOSE 8888
-ENTRYPOINT ipython notebook --ip 0.0.0.0 --no-browser
+CMD ipython notebook --ip 0.0.0.0 --no-browser
