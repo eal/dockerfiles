@@ -1,0 +1,13 @@
+#!/bin/bash
+set -ex 
+
+i=$(buildah from alpine)
+run="buildah run $i"
+
+$run apk update
+$run apk add clamav
+$run freshclam
+
+buildah commit $i clamav
+
+sudo buildah push clamav docker-daemon:clamav:latest
