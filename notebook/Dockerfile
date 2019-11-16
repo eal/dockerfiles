@@ -1,6 +1,6 @@
 # Ubuntu Bionic / Python 3 / Jupyter / R
 
-FROM ubuntu:dapper
+FROM ubuntu:eoan
 MAINTAINER datatyp
 
 RUN apt-get update && apt-get -y dist-upgrade
