@@ -31,11 +31,11 @@ RUN apt-get -y install python3-zmq
 RUN pip3 install jinja2 tornado jsonschema jupyter
 
 # Other python libs used to get to data
-RUN pip3 install elasticsearch
+RUN pip3 install elasticsearch requests simplejson
 
 # R
-RUN apt-get -y install r-recommended r-cran-evaluate
-RUN pip3 install r2_kernel
+# RUN apt-get -y install r-recommended r-cran-evaluate
+# RUN pip3 install r2_kernel
 
 #mathjax stuff
 # RUN echo 'from IPython.external import mathjax; mathjax.install_mathjax()' | python3
@@ -49,7 +49,14 @@ RUN apt-get clean && rm -rf /root/.cache /var/lib/apt/lists/* /tmp/* /var/tmp/*
 # mount a volume on data for persistence
 RUN mkdir -p /data
 
+# and separate for config
+RUN mkdir -p /etc/jupyter
+
+RUN useradd -u 1000 -m jupyter
+RUN mkdir /home/jupyter/.jupyter && chown -R jupyter:jupyter /home/jupyter
+
 WORKDIR /data
+USER jupyter
 
 EXPOSE 8888
 CMD jupyter notebook --ip 0.0.0.0 --no-browser
