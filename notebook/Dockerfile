@@ -1,6 +1,6 @@
-# Ubuntu Bionic / Python 3 / Jupyter / R
+# Ubuntu / Python 3 / Jupyter / R
 
-FROM ubuntu:eoan
+FROM ubuntu:groovy
 MAINTAINER datatyp
 
 RUN apt-get update && apt-get -y dist-upgrade
@@ -22,7 +22,7 @@ RUN echo "tzdata tzdata/Areas select Europe" > /tmp/preseed.txt; \
 RUN apt-get -y install python3 python3-pip
 
 # numpy & friends
-RUN apt-get -y install python3-pandas python3-scipy python3-matplotlib python3-matplotlib
+RUN apt-get -y install python3-pandas python3-scipy python3-matplotlib python3-matplotlib python3-openpyxl
 RUN pip3 install scipy pandas matplotlib bokeh
 
 # ipython notebook
@@ -46,15 +46,16 @@ RUN apt-get install -y jq curl
 # Clean up
 RUN apt-get clean && rm -rf /root/.cache /var/lib/apt/lists/* /tmp/* /var/tmp/*
 
+RUN useradd -u 1000 -m jupyter
+RUN mkdir /home/jupyter/.jupyter && chown -R jupyter:jupyter /home/jupyter
+
 # mount a volume on data for persistence
-RUN mkdir -p /data
+RUN mkdir -p /data && chown -R jupyter:jupyter /data
 
 # and separate for config
 RUN mkdir -p /etc/jupyter
 
-RUN useradd -u 1000 -m jupyter
-RUN mkdir /home/jupyter/.jupyter && chown -R jupyter:jupyter /home/jupyter
-
+VOLUME /data
 WORKDIR /data
 USER jupyter
 
